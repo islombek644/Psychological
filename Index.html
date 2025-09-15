@@ -1,1 +1,667 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psixologik Xarakter Testi</title>
+    <style>
+        :root {
+            --primary: #ff3e66;
+            --secondary: #2b2d42;
+            --accent: #08c;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2b2d42 0%, #000000 100%);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(43, 45, 66, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,62,102,0.1) 0%, rgba(0,0,0,0) 70%);
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 2.5rem;
+            text-shadow: 0 2px 10px rgba(255, 62, 102, 0.5);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #ff7b9c 100%);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .option:hover {
+            background: rgba(255, 62, 102, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 62, 102, 0.3);
+        }
+        
+        .option.selected {
+            background: rgba(255, 62, 102, 0.3);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 62, 102, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, var(--primary) 0%, #ff7b9c 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(255, 62, 102, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 62, 102, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .result-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .result-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .result-score {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .restart-btn {
+            background: linear-gradient(90deg, var(--accent) 0%, #5ab9ea 100%);
+            box-shadow: 0 5px 15px rgba(8, 136, 204, 0.4);
+        }
+        
+        .restart-btn:hover {
+            box-shadow: 0 8px 20px rgba(8, 136, 204, 0.6);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 62, 102, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 62, 102, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 62, 102, 0.4); }
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Ro'yxatdan o'tish qismi -->
+        <div id="register-section" class="section active">
+            <h1 class="floating">Xarakter Testi</h1>
+            <h2>O'zingiz haqingizda qiziqarli ma'lumotlarni bilib oling</h2>
+            
+            <div class="input-group">
+                <label for="name">Ismingiz</label>
+                <input type="text" id="name" placeholder="Ismingizni kiriting">
+            </div>
+            
+            <div class="input-group">
+                <label for="age">Yoshingiz</label>
+                <input type="number" id="age" min="12" max="100" placeholder="Yoshingizni kiriting">
+            </div>
+            
+            <div class="input-group">
+                <label for="gender">Jinsingiz</label>
+                <select id="gender">
+                    <option value="">Jinsingizni tanlang</option>
+                    <option value="male">Erkak</option>
+                    <option value="female">Ayol</option>
+                </select>
+            </div>
+            
+            <button id="start-btn" class="btn pulse">Testni Boshlash</button>
+        </div>
+        
+        <!-- Savollar qismi -->
+        <div id="test-section" class="section">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question" id="question-text"></div>
+            </div>
+            
+            <div class="options-container" id="options-container">
+                <!-- Variantlar JavaScript orqali qo'shiladi -->
+            </div>
+            
+            <button id="next-btn" class="btn">Keyingi Savol</button>
+        </div>
+        
+        <!-- Natija qismi -->
+        <div id="result-section" class="section">
+            <div class="result-container">
+                <h2 class="result-title" id="result-title"></h2>
+                <div class="result-score" id="result-score"></div>
+                <div class="result-description" id="result-description"></div>
+                <button id="restart-btn" class="btn restart-btn">Qayta Boshlash</button>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elementlari
+            const registerSection = document.getElementById('register-section');
+            const testSection = document.getElementById('test-section');
+            const resultSection = document.getElementById('result-section');
+            const startBtn = document.getElementById('start-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const progressBar = document.getElementById('progress-bar');
+            const resultTitle = document.getElementById('result-title');
+            const resultScore = document.getElementById('result-score');
+            const resultDescription = document.getElementById('result-description');
+            
+            // Foydalanuvchi ma'lumotlari
+            let userData = {
+                name: '',
+                age: 0,
+                gender: ''
+            };
+            
+            // Test ma'lumotlari
+            let currentQuestion = 0;
+            let answers = [];
+            
+            // Savollar bazasi
+            const questions = [
+                {
+                    question: "Agar sizda katta miqdorda pul topsangiz, nima qilasiz?",
+                    options: [
+                        { text: "Darvozalarga e'tibor bermay, xarajat qilaman", score: 1 },
+                        { text: "Kelajik uchun tejab qo'yaman", score: 2 },
+                        { text: "Yaqinlaringizga yordam berishga sarflaysiz", score: 3 },
+                        { text: "O'zingizga qimmatbaho sovg'a sotib olasiz", score: 4 }
+                    ]
+                },
+                {
+                    question: "Do'stlaringiz sizni qanday tavsiflaydi?",
+                    options: [
+                        { text: "Ijodiy va o'zgacha fikrlash", score: 1 },
+                        { text: "Mas'uliyatli va ishonchli", score: 2 },
+                        { text: "Qiziquvchan va tadqiqotchi", score: 3 },
+                        { text: "Optimist va hayotni sevuvchi", score: 4 }
+                    ]
+                },
+                {
+                    question: "Bo'sh vaqtlaringizda nima qilishni yaxshi ko'rasiz?",
+                    options: [
+                        { text: "Kitob o'qish yoki filmlar tomosha qilish", score: 1 },
+                        { text: "Sport bilan shug'ullanish", score: 2 },
+                        { text: "Do'stlar bilan uchrashish", score: 3 },
+                        { text: "Yangi narsalarni o'rganish", score: 4 }
+                    ]
+                },
+                {
+                    question: "Sizning eng katta qo'rquvingiz nima?",
+                    options: [
+                        { text: "Muvaffaqiyatsizlik", score: 1 },
+                        { text: "Yolg'izlik", score: 2 },
+                        { text: "Noma'lumlik", score: 3 },
+                        { text: "Vaqtni behuda sarflash", score: 4 }
+                    ]
+                },
+                {
+                    question: "Qanday muhitda o'zingizni eng qulay his qilasiz?",
+                    options: [
+                        { text: "Tinch va tartibli joylar", score: 1 },
+                        { text: "Ijtimoiy va odamlar ko'p bo'lgan joylar", score: 2 },
+                        { text: "Tabiat qushlagan joylar", score: 3 },
+                        { text: "Harakat va yangiliklar bilan to'la joylar", score: 4 }
+                    ]
+                },
+                {
+                    question: "Agar hayotingizni qayta yarata olsangiz, nima o'zgartirgan bo'lar edingiz?",
+                    options: [
+                        { text: "Ko'proq risk olgan bo'lardim", score: 1 },
+                        { text: "O'qishga ko'proq vaqt ajratgan bo'lardim", score: 2 },
+                        { text: "Do'stlarim bilan ko'proq vaqt o'tkazgan bo'lardim", score: 3 },
+                        { text: "Ko'proq sayohat qilgan bo'lardim", score: 4 }
+                    ]
+                },
+                {
+                    question: "Sizni eng ko'p nima g'azablantiradi?",
+                    options: [
+                        { text: "Adolatsizlik", score: 1 },
+                        { text: "Aqldan ozganlik", score: 2 },
+                        { text: "Vaqtni isrof qilish", score: 3 },
+                        { text: "Hurmat ko'rsatmaslik", score: 4 }
+                    ]
+                },
+                {
+                    question: "Sizning eng katta orzuingiz nima?",
+                    options: [
+                        { text: "Mashhur bo'lish", score: 1 },
+                        { text: "Boy bo'lish", score: 2 },
+                        { text: "Xotirjam hayot kechirish", score: 3 },
+                        { text: "Dunyoni sayohat qilish", score: 4 }
+                    ]
+                },
+                {
+                    question: "Qachon o'zingizni eng baxtli his qilasiz?",
+                    options: [
+                        { text: "Yangi narsalarni kashf etganimda", score: 1 },
+                        { text: "Yaqinlarim bilan vaqt o'tkazganimda", score: 2 },
+                        { text: "Muvaffaqiyatga erishganimda", score: 3 },
+                        { text: "Boshqalarga yordam berganimda", score: 4 }
+                    ]
+                },
+                {
+                    question: "O'zingizning eng kuchli tomoningiz nima?",
+                    options: [
+                        { text: "Qat'iyatli va matonatli", score: 1 },
+                        { text: "Aql-idrok va donolik", score: 2 },
+                        { text: "Hissiyot va hamdardlik", score: 3 },
+                        { text: "Ijodkorlik va tasavvur", score: 4 }
+                    ]
+                },
+                {
+                    question: "Agar sizga faqat bitta sifat saqlab qolish imkoniyati berilsa, qaysi birini tanlardingiz?",
+                    options: [
+                        { text: "Aql-idrok", score: 1 },
+                        { text: "Yaxshi niyat", score: 2 },
+                        { text: "Jasorat", score: 3 },
+                        { text: "Hazil tuyg'usi", score: 4 }
+                    ]
+                },
+                {
+                    question: "Qanday turdagi kitoblarni o'qishni yaxshi ko'rasiz?",
+                    options: [
+                        { text: "Fantastika va sarguzasht", score: 1 },
+                        { text: "Tarixiy va ilmiy", score: 2 },
+                        { text: "Psixologik va falsafiy", score: 3 },
+                        { text: "Romantika va dramalar", score: 4 }
+                    ]
+                },
+                {
+                    question: "O'zingizni qaysi hayvonga o'xshatgan bo'lar edingiz?",
+                    options: [
+                        { text: "Sher - kuchli va hukmron", score: 1 },
+                        { text: "Tulki - aqlli va hiylagar", score: 2 },
+                        { text: "It - sodiq va do'stona", score: 3 },
+                        { text: "Bayquş - dono va sirli", score: 4 }
+                    ]
+                },
+                {
+                    question: "Hayotda siz uchun eng muhimi nima?",
+                    options: [
+                        { text: "Muvaffaqiyat va e'tirof", score: 1 },
+                        { text: "Sevgi va oila", score: 2 },
+                        { text: "Erkinlik va mustaqillik", score: 3 },
+                        { text: "Bilim va tajriba", score: 4 }
+                    ]
+                },
+                {
+                    question: "O'lim to'g'risida qanday fikrdasiz?",
+                    options: [
+                        { text: "Bu hayotning tabiiy qismi", score: 1 },
+                        { text: "Bu hayotning eng dahshatli narsasi", score: 2 },
+                        { text: "Bu yangi boshlanish bo'lishi mumkin", score: 3 },
+                        { text: "Bu haqida o'ylashni xohlamayman", score: 4 }
+                    ]
+                },
+                {
+                    question: "Agar siz butun dunyoni boshqarish imkoniyati berilsa, birinchi qiladigan ishingiz nima bo'lardi?",
+                    options: [
+                        { text: "Tinchlik o'rnatish", score: 1 },
+                        { text: "Qashshoqlikni yo'q qilish", score: 2 },
+                        { text: "Erkinlikni kengaytirish", score: 3 },
+                        { text: "Ta'lim tizimini isloh qilish", score: 4 }
+                    ]
+                },
+                {
+                    question: "O'zingizni qanday ruhiyatda ko'proq bo'lasiz?",
+                    options: [
+                        { text: "Optimist - har doim yaxshi tomondan qarash", score: 1 },
+                        { text: "Realist - hayotni bo'yiicha ko'rish", score: 2 },
+                        { text: "Pessimist - har doim yomonlikni kutish", score: 3 },
+                        { text: "Idealist - dunyoni yaxshi tomondan ko'rish", score: 4 }
+                    ]
+                },
+                {
+                    question: "Qaysi rang sizga ko'proq mos keladi?",
+                    options: [
+                        { text: "Qizil - qizg'in va faol", score: 1 },
+                        { text: "Ko'k - sokin va vazmin", score: 2 },
+                        { text: "Yashil - tabiiy va muvozanatli", score: 3 },
+                        { text: "Qora - sirli va chuqur", score: 4 }
+                    ]
+                },
+                {
+                    question: "O'zingizni qachon eng zaif his qilasiz?",
+                    options: [
+                        { text: "Muvaffaqiyatsizlik paytida", score: 1 },
+                        { text: "Yolg'izlikda", score: 2 },
+                        { text: "Noma'lumlikda", score: 3 },
+                        { text: "Tanqid qilinganda", score: 4 }
+                    ]
+                },
+                {
+                    question: "O'zingizni kelajakda qanday ko'rasiz?",
+                    options: [
+                        { text: "Muvaffaqiyatli mutaxassis", score: 1 },
+                        { text: "Baxtli oila boshlig'i", score: 2 },
+                        { text: "Erkin sayohatchi", score: 3 },
+                        { text: "Ijodiy shaxs", score: 4 }
+                    ]
+                }
+            ];
+            
+            // Testni boshlash
+            startBtn.addEventListener('click', function() {
+                const name = document.getElementById('name').value;
+                const age = document.getElementById('age').value;
+                const gender = document.getElementById('gender').value;
+                
+                if (!name || !age || !gender) {
+                    alert('Iltimos, barcha maydonlarni to\'ldiring!');
+                    return;
+                }
+                
+                userData = { name, age, gender };
+                registerSection.classList.remove('active');
+                testSection.classList.add('active');
+                
+                showQuestion();
+            });
+            
+            // Savolni ko'rsatish
+            function showQuestion() {
+                const question = questions[currentQuestion];
+                questionText.textContent = question.question;
+                
+                // Progress barni yangilash
+                const progress = ((currentQuestion + 1) / questions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                // Variantlarni yaratish
+                optionsContainer.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('option');
+                    optionElement.textContent = option.text;
+                    optionElement.dataset.index = index;
+                    
+                    optionElement.addEventListener('click', function() {
+                        // Barcha variantlardan tanlangan klassini olib tashlash
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Tanlangan variantga klass qo'shish
+                        this.classList.add('selected');
+                        
+                        // Javobni saqlash
+                        answers[currentQuestion] = index;
+                    });
+                    
+                    optionsContainer.appendChild(optionElement);
+                });
+                
+                // Agar avval javob berilgan bo'lsa, uni tanlash
+                if (answers[currentQuestion] !== undefined) {
+                    const selectedOption = optionsContainer.querySelector(`[data-index="${answers[currentQuestion]}"]`);
+                    if (selectedOption) {
+                        selectedOption.classList.add('selected');
+                    }
+                }
+            }
+            
+            // Keyingi savolga o'tish
+            nextBtn.addEventListener('click', function() {
+                if (answers[currentQuestion] === undefined) {
+                    alert('Iltimos, javob variantlaridan birini tanlang!');
+                    return;
+                }
+                
+                currentQuestion++;
+                
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    // Test yakunlandi
+                    testSection.classList.remove('active');
+                    resultSection.classList.add('active');
+                    showResults();
+                }
+            });
+            
+            // Natijalarni hisoblash va ko'rsatish
+            function showResults() {
+                // Umumiy ballni hisoblash
+                let totalScore = 0;
+                questions.forEach((question, index) => {
+                    if (answers[index] !== undefined) {
+                        totalScore += question.options[answers[index]].score;
+                    }
+                });
+                
+                // Maksimal ball
+                const maxScore = questions.length * 4;
+                const percentage = (totalScore / maxScore) * 100;
+                
+                // Xarakter tipini aniqlash
+                let characterType = '';
+                let description = '';
+                
+                if (percentage >= 80) {
+                    characterType = 'LIDER VA QATTIQQOLL';
+                    description = `Siz, ${userData.name}, tabiatan lider va qat'iyatli insonsiz. Maqsadlaringizga erishish uchun har qanday to'siqlarni engib o'ta olasiz. Sizda kuchli iroda va aniq vision bor. Odamlar sizga ishonishadi va sizni qo'llab-quvvatlashadi. Biroq, ba'zida boshqalarning hissiyotlariga yetarlicha e'tibor bermasligingiz mumkin.`;
+                } else if (percentage >= 60) {
+                    characterType = 'DONO VA ANALITIK';
+                    description = `Siz, ${userData.name}, dono va chuqur fikrlash qobiliyatiga egasiz. Har qanday vaziyatni analiz qilish va eng yaxshi yechimni topish sizning kuchli tomoningiz. Siz intellektual jihatdan rivojlangan va bilimga chanqoq insonsiz. Ba'zida haddan tashqari hadiklash yoki qaror qabul qilishda sustkashlik qilishingiz mumkin.`;
+                } else if (percentage >= 40) {
+                    characterType = 'MEHRONA VA HISSİY';
+                    description = `Siz, ${userData.name}, mehribon va hissiyotli insonsiz. Boshqalarning ehtiyojlarini sezishingiz va ularga yordam berishingiz sizning asosiy fazilatlaringizdan. Siz oilaviy va do'stona munosabatlarni qadrlaysiz. Biroq, ba'zida boshqalar sizning yaxshiligingizdan foydalanishlari mumkin, shuning uchun ehtiyot bo'lishingiz kerak.`;
+                } else {
+                    characterType = 'IJODKOR VA ERKIN RUH';
+                    description = `Siz, ${userData.name}, ijodiy va erkin fikrlashga egasiz. Siz yangilikni, sarguzashtni va o'zgarishni yaxshi ko'rasiz. Hayotni to'liq yashashga intilasiz va boshqalarni ham shunday qilishga undaysiz. Biroq, ba'zida barqarorlik va uzoq muddatli majburiyatlarning ahamiyatini unutishingiz mumkin.`;
+                }
+                
+                resultTitle.textContent = `Sizning xarakteringiz: ${characterType}`;
+                resultScore.textContent = `Sizning natijangiz: ${totalScore} ball (${percentage.toFixed(1)}%)`;
+                resultDescription.textContent = description;
+            }
+            
+            // Testni qayta boshlash
+            restartBtn.addEventListener('click', function() {
+                currentQuestion = 0;
+                answers = [];
+                
+                resultSection.classList.remove('active');
+                registerSection.classList.add('active');
+            });
+        });
+    </script>
+</body>
+  </html>
